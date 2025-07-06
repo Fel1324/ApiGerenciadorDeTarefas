@@ -8,4 +8,4 @@
     - **Administrador**: gerencia usuários e equipes. (admin)
     - **Membro**: gerencia tarefas atribuídas. (member)
 
-- Duas roles: admin e member
+- Duas roles: admin e member [X]

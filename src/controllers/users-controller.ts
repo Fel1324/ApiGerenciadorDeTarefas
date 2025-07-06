@@ -1,9 +1,9 @@
 import { Request, Response } from "express"
+import { hash } from "bcrypt"
 import { z } from "zod"
 
 import { prisma } from "@/database/prisma"
 import { AppError } from "@/utils/app-error"
-import { hash } from "bcrypt"
 import { UserRole } from "@/generated/prisma"
 
 const { admin, member } = UserRole
