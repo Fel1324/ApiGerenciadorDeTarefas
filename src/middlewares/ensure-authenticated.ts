@@ -14,7 +14,7 @@ export function ensureAuthenticated(req: Request, res: Response, next: NextFunct
     const authHeader = req.headers.authorization
 
     if(!authHeader){
-      throw new AppError("Token não encontrado! Por favor faça seu login")
+      throw new AppError("Token não encontrado! Por favor faça seu login", 401)
     }
 
     const [, token] = authHeader.split(" ") 
