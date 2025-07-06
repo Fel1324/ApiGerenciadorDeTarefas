@@ -26,7 +26,11 @@ export class TeamsController{
       orderBy: { createdAt: "desc" },
       include: {
         tasks: true,
-        teamMembers: true
+        teamMembers: {
+          select: {
+            user: true
+          }
+        }
       }
     })
 
