@@ -7,5 +7,6 @@ const teamsRoutes = Router()
 const teamsController = new TeamsController()
 
 teamsRoutes.post("/", verifyUserAuthorization(["admin"]), teamsController.create)
+teamsRoutes.put("/:id", verifyUserAuthorization(["admin"]), teamsController.update)
 
 export { teamsRoutes }
