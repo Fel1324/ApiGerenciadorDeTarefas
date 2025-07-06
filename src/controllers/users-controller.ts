@@ -9,6 +9,49 @@ import { UserRole } from "@/generated/prisma"
 const { admin, member } = UserRole
 
 export class UsersController {
+  async index(req: Request, res: Response){
+    const querySchema = z.object({
+      page: z.coerce.number().optional().default(1),
+      perPage: z.coerce.number().optional().default(5)
+    })
+
+    const { page, perPage } = querySchema.parse(req.query)
+    const skip = (page - 1) * perPage
+
+    const users = await prisma.user.findMany({
+      skip,
+      take: perPage,
+      orderBy: { createdAt: "desc" },
+      include: {
+        teamMembers: {
+          select: {
+            team: {
+              select: {
+                id: true,
+                name: true,
+                description: true
+              }
+            }
+          }
+        }
+      }
+    })
+
+    const totalRecords = await prisma.user.count()
+    const totalPages = Math.ceil(totalRecords / perPage)
+
+    res.json({
+      users,
+      pagination: {
+        page,
+        perPage,
+        totalRecords,
+        totalPages: totalPages > 0 ? totalPages : 1
+      }
+    })
+    return
+  }
+
   async create(req: Request, res: Response){
     const bodySchema = z.object({
       name: z.string().trim().min(2, "O nome deve conter no mínimo 2 caracteres"),
