@@ -1,12 +1,18 @@
-import { Router } from "express";
+import { Router } from "express"
 
-import { usersRoutes } from "@/routes/users-routes";
-import { sessionsRoutes } from "./sessions-routes";
+import { usersRoutes } from "@/routes/users-routes"
+import { sessionsRoutes } from "./sessions-routes"
+import { teamsRoutes } from "./teams-routes"
+import { ensureAuthenticated } from "@/middlewares/ensure-authenticated"
 
 const routes = Router()
 
 // Public Routes
 routes.use("/users", usersRoutes)
 routes.use("/sessions", sessionsRoutes)
+
+// Private Routes
+routes.use(ensureAuthenticated)
+routes.use("/teams", teamsRoutes)
 
 export { routes }
