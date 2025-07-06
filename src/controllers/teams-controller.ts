@@ -5,6 +5,53 @@ import { AppError } from "@/utils/app-error"
 import { prisma } from "@/database/prisma"
 
 export class TeamsController{
+  async index(req: Request, res: Response){
+    const querySchema = z.object({
+      name: z.string().optional().default(""),
+      page: z.coerce.number().optional().default(1),
+      perPage: z.coerce.number().optional().default(5)
+    })
+
+    const { name, page, perPage } = querySchema.parse(req.query)
+    const skip = (page - 1) * perPage
+
+    const teams = await prisma.team.findMany({
+      skip,
+      take: perPage,
+      where: {
+        name: {
+          contains: name.trim()
+        }
+      },
+      orderBy: { createdAt: "desc" },
+      include: {
+        tasks: true,
+        teamMembers: true
+      }
+    })
+
+    const totalRecords = await prisma.team.count({
+      where: {
+        name: {
+          contains: name.trim()
+        }
+      }
+    })
+
+    const totalPages = Math.ceil(totalRecords / perPage)
+
+    res.json({
+      teams,
+      pagination: {
+        page,
+        perPage,
+        totalRecords,
+        totalPages: totalPages > 0 ? totalPages : 1
+      }
+    })
+    return
+  }
+
   async create(req: Request, res: Response){
     const bodySchema = z.object({
       name: z.string().trim().min(5, "O nome do time deve ter no mínimo 5 caracteres"),
@@ -27,10 +74,6 @@ export class TeamsController{
       data: {
         name,
         description,
-      },
-      include: {
-        tasks: true,
-        teamMembers: true
       }
     })
 
@@ -40,7 +83,7 @@ export class TeamsController{
 
   async update(req: Request, res: Response){
     const paramsSchema = z.object({
-      id: z.string().uuid()
+      id: z.string().uuid("Id inválido")
     })
 
     const bodySchema = z.object({
@@ -68,6 +111,29 @@ export class TeamsController{
     })
 
     res.json(newTeam)
+    return
+  }
+
+  async remove(req: Request, res: Response){
+    const paramsSchema = z.object({
+      id: z.string().uuid("Id inválido")
+    })
+
+    const { id } = paramsSchema.parse(req.params)
+
+    const team = await prisma.team.findUnique({
+      where: { id }
+    })
+
+    if(!team){
+      throw new AppError("Time não encontrado", 404)
+    }
+    
+    await prisma.team.delete({
+      where: { id }
+    })
+    
+    res.json({ team })
     return
   }
 }
