@@ -138,6 +138,16 @@ export class TeamsController{
     if(!team){
       throw new AppError("Time não encontrado", 404)
     }
+
+    const teamWithUsers = await prisma.teamMember.findFirst({
+      where: {
+        teamId: id
+      }
+    })
+
+    if(teamWithUsers){
+      throw new AppError("Não é possível remover times com usuários")
+    }
     
     await prisma.team.delete({
       where: { id }
