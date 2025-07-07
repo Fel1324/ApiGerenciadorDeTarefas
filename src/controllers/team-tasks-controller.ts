@@ -52,10 +52,10 @@ export class TeamTasksController{
                       select: {
                         name: true,
                         email: true,
-                        role: true
+                        role: true,
+                        TaskHistories: true
                       }
-                    },
-                    taskHistories: true
+                    }
                   }
                 }
               }

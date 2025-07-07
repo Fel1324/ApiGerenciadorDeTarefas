@@ -19,6 +19,14 @@ export class TasksController{
             name: true,
             email: true,
             role: true,
+            TaskHistories: {
+              select: {
+                id: true,
+                oldStatus: true,
+                newStatus: true,
+                changedAt: true
+              }
+            }
           }
         },
         team: {
@@ -109,13 +117,14 @@ export class TasksController{
     const bodySchema = z.object({
       title: z.string().trim().min(5, "O título da tarefa deve conter no mínimo 5 caracteres").optional(),
       description: z.string().trim().optional(),
+      status: z.enum([completed, inProgress, pending]).optional(),
       priority: z.enum([high, low, medium]),
       assigned_to: z.string().uuid("Id inválido").default(task.assignedTo),
       team_id: z.string().uuid("Id inválido").default(task.teamId)
     })
 
     
-    const { title, description, priority, assigned_to, team_id } = bodySchema.parse(req.body)
+    const { title, description, status, priority, assigned_to, team_id } = bodySchema.parse(req.body)
 
     const user = await prisma.user.findUnique({
       where: { id: assigned_to }
@@ -152,6 +161,7 @@ export class TasksController{
         title,
         description,
         priority,
+        status,
         assignedTo: assigned_to,
         teamId: team_id
       }

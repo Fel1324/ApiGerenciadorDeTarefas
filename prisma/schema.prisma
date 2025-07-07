@@ -100,4 +100,6 @@ model TaskHistory {
   task Task @relation(fields: [taskId], references: [id])
 
   changedAt DateTime? @updatedAt @map("changed_at")
+
+  @@map("task_history")
 }
