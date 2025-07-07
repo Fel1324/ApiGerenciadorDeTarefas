@@ -123,15 +123,13 @@ export class TasksController{
 
     const bodySchema = z.object({
       title: z.string().trim().min(5, "O título da tarefa deve conter no mínimo 5 caracteres").optional(),
-      description: z.string().trim().optional(),
-      status: z.enum([completed, in_progress, pending]).optional(),
+      description: z.string().trim(),
       priority: z.enum([high, low, medium]).optional(),
       assigned_to: z.string().uuid("Id inválido").default(task.assignedTo),
       team_id: z.string().uuid("Id inválido").default(task.teamId)
     })
-
     
-    const { title, description, status, priority, assigned_to, team_id } = bodySchema.parse(req.body)
+    const { title, description, priority, assigned_to, team_id } = bodySchema.parse(req.body)
 
     const user = await prisma.user.findUnique({
       where: { id: assigned_to }
@@ -160,6 +158,23 @@ export class TasksController{
 
     if(!teamMember){
       throw new AppError("Usuário informado não está no time informado")
+    }
+
+    const status = task.assignedTo !== assigned_to ? "pending" : task.status
+
+    if(!req.user?.id){
+      throw new AppError("Não autorizado", 401)
+    }
+
+    if(task.assignedTo !== assigned_to){
+      await prisma.taskHistory.create({
+        data: {
+          oldStatus: task.status,
+          newStatus: status,
+          changedBy: req.user.id,
+          taskId: id
+        }
+      })
     }
 
     const newTask = await prisma.task.update({

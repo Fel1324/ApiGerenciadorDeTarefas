@@ -62,7 +62,8 @@ export class TeamTasksController{
                         user: {
                           select: {
                             name: true,
-                            email: true
+                            email: true,
+                            role: true
                           }
                         }
                       }
