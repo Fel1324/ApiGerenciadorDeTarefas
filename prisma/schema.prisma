@@ -73,7 +73,7 @@ model Task {
   id String @id @default(uuid())
   title String
   description String?
-  status TaskStatus
+  status TaskStatus @default(pending)
   priority TaskPriority
   assignedTo String @map("assigned_to")
   teamId String @map("team_id")

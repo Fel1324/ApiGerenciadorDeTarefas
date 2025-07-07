@@ -33,7 +33,29 @@ export class UsersController {
               }
             }
           }
+        },
+        tasks: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            status: true,
+            priority: true
+          }
         }
+      }
+    })
+
+    const usersWithoutPasswords = users.map((user) => {
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        teamMembers: user.teamMembers,
+        tasks: user.tasks
       }
     })
 
@@ -41,7 +63,7 @@ export class UsersController {
     const totalPages = Math.ceil(totalRecords / perPage)
 
     res.json({
-      users,
+      users: usersWithoutPasswords,
       pagination: {
         page,
         perPage,

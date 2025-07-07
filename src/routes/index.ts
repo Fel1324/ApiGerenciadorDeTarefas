@@ -5,6 +5,7 @@ import { sessionsRoutes } from "./sessions-routes"
 import { teamsRoutes } from "./teams-routes"
 import { ensureAuthenticated } from "@/middlewares/ensure-authenticated"
 import { teamMemberRoutes } from "./team-members-routes"
+import { tasksRoutes } from "./tasks-routes"
 
 const routes = Router()
 
@@ -16,5 +17,6 @@ routes.use("/sessions", sessionsRoutes)
 routes.use(ensureAuthenticated)
 routes.use("/teams", teamsRoutes)
 routes.use("/team-members", teamMemberRoutes)
+routes.use("/tasks", tasksRoutes)
 
 export { routes }

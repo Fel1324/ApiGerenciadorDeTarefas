@@ -25,14 +25,22 @@ export class TeamsController{
       },
       orderBy: { createdAt: "desc" },
       include: {
-        tasks: true,
         teamMembers: {
           select: {
             user: {
               select: {
                 id: true,
                 name: true,
-                email: true
+                email: true,
+                tasks: {
+                  select: {
+                    id: true,
+                    title: true,
+                    description: true,
+                    status: true,
+                    priority: true
+                  }
+                }
               }
             }
           }
