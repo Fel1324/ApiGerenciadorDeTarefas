@@ -154,7 +154,15 @@ export class TeamsController{
     })
 
     if(teamWithUsers){
-      throw new AppError("Não é possível remover times com usuários")
+      throw new AppError("Remova os usuários que fazem parte do time antes de deletá-lo")
+    }
+
+    const teamWithTasks = await prisma.task.findFirst({
+      where: { teamId: id }
+    })
+
+    if(teamWithTasks){
+      throw new AppError("Remova as tarefas que foram atribuídas ao time antes de deletá-lo")
     }
     
     await prisma.team.delete({

@@ -186,6 +186,20 @@ export class TasksController{
       throw new AppError("Task não encontrada", 404)
     }
 
+    const taskHistories = await prisma.taskHistory.findMany({
+      where: {
+        taskId: id
+      }
+    })
+
+    if(taskHistories){
+      await prisma.taskHistory.deleteMany({
+        where: {
+          taskId: id
+        }
+      })
+    }
+
     await prisma.task.delete({
       where: { id }
     })

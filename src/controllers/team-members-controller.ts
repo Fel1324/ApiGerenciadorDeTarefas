@@ -88,30 +88,6 @@ export class TeamMembersController{
       throw new AppError("Usuário informado não está no time informado", 404)
     }
 
-    const task = await prisma.task.findMany({
-      where: { assignedTo: user_id }
-    })
-
-    const taskHistory = await prisma.taskHistory.findMany({
-      where: { changedBy: user_id }
-    })
-
-    if(taskHistory){
-      await prisma.taskHistory.deleteMany({
-        where: { 
-          changedBy: user_id 
-        }
-      })
-    }
-
-    if(task){
-      await prisma.task.deleteMany({
-        where: {
-          assignedTo: user_id
-        }
-      })
-    }
-
     await prisma.teamMember.delete({
       where: {
         userId_teamId: {
