@@ -10,7 +10,22 @@ const { high, low, medium } = TaskPriority
 
 export class TasksController{
   async index(req: Request, res: Response){
+    const queryParams = z.object({
+      status: z.enum([completed, in_progress, pending]).optional(),
+      priority: z.enum([high, low, medium]).optional()
+    })
+
+    const { status, priority } = queryParams.parse(req.query)
+
     const tasks = await prisma.task.findMany({
+      where: {
+        status: {
+          equals: status
+        },
+        priority: {
+          equals: priority
+        }
+      },
       orderBy: { updatedAt: "desc" },
       include: {
         user: {
