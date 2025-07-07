@@ -1,5 +1,4 @@
 import { Request, Response } from "express"
-import { z } from "zod"
 
 import { prisma } from "@/database/prisma"
 import { AppError } from "@/utils/app-error"
@@ -51,9 +50,21 @@ export class TeamTasksController{
                     user: {
                       select: {
                         name: true,
-                        email: true,
-                        role: true,
-                        taskHistories: true
+                        email: true
+                      }
+                    },
+                    taskHistories: {
+                      select: {
+                        id: true,
+                        oldStatus: true,
+                        newStatus: true,
+                        changedAt: true,
+                        user: {
+                          select: {
+                            name: true,
+                            email: true
+                          }
+                        }
                       }
                     }
                   }

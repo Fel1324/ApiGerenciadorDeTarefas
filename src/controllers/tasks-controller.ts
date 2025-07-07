@@ -19,14 +19,6 @@ export class TasksController{
             name: true,
             email: true,
             role: true,
-            taskHistories: {
-              select: {
-                id: true,
-                oldStatus: true,
-                newStatus: true,
-                changedAt: true
-              }
-            }
           }
         },
         team: {
@@ -34,6 +26,21 @@ export class TasksController{
             id: true,
             name: true,
             description: true
+          }
+        },
+        taskHistories: {
+          select: {
+            id: true,
+            oldStatus: true,
+            newStatus: true,
+            changedAt: true,
+            user: {
+              select: {
+                name: true,
+                email: true,
+                role: true
+              }
+            }
           }
         }
       }
@@ -118,7 +125,7 @@ export class TasksController{
       title: z.string().trim().min(5, "O título da tarefa deve conter no mínimo 5 caracteres").optional(),
       description: z.string().trim().optional(),
       status: z.enum([completed, inProgress, pending]).optional(),
-      priority: z.enum([high, low, medium]),
+      priority: z.enum([high, low, medium]).optional(),
       assigned_to: z.string().uuid("Id inválido").default(task.assignedTo),
       team_id: z.string().uuid("Id inválido").default(task.teamId)
     })
