@@ -34,7 +34,7 @@ model User {
 
   teamMembers TeamMember[]
   tasks Task[]
-  TaskHistories TaskHistory[]
+  taskHistories TaskHistory[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")

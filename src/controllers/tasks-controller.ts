@@ -19,7 +19,7 @@ export class TasksController{
             name: true,
             email: true,
             role: true,
-            TaskHistories: {
+            taskHistories: {
               select: {
                 id: true,
                 oldStatus: true,

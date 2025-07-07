@@ -53,7 +53,7 @@ export class TeamTasksController{
                         name: true,
                         email: true,
                         role: true,
-                        TaskHistories: true
+                        taskHistories: true
                       }
                     }
                   }
