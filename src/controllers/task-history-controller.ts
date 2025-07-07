@@ -9,6 +9,10 @@ const { completed, in_progress, pending } = TaskStatus
 
 export class TaskHistoryController {
   async create(req: Request, res: Response){
+    if(!req.user){
+      throw new AppError("Não autorizado", 401)
+    }
+
     const user_id = req.user?.id
 
     if(!user_id){
@@ -51,6 +55,10 @@ export class TaskHistoryController {
 
     if(task.assignedTo !== user.id){
       throw new AppError("Não autorizado! A task informada não foi atribuída a você", 401)
+    }
+
+    if(task.status === "completed"){
+      throw new AppError("Está tarefa já foi completada, não é possível criar mais históricos para ela")
     }
 
     const taskHistory = await prisma.taskHistory.create({

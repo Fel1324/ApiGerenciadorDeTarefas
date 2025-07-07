@@ -1,10 +1,22 @@
+import { TaskPriority, TaskStatus } from "@/generated/prisma"
 import { Request, Response } from "express"
+import { z } from "zod"
 
 import { prisma } from "@/database/prisma"
 import { AppError } from "@/utils/app-error"
 
+const { completed, in_progress, pending } = TaskStatus
+const { high, low, medium } = TaskPriority
+
 export class TeamTasksController{
   async index(req: Request, res: Response){
+    const queryParams = z.object({
+      status: z.enum([completed, in_progress, pending]).optional(),
+      priority: z.enum([high, low, medium]).optional()
+    })
+
+    const { status, priority } = queryParams.parse(req.query)
+
     const user_id = req.user?.id
 
     if(!user_id){
@@ -41,6 +53,14 @@ export class TeamTasksController{
                 name: true,
                 description: true,
                 tasks: {
+                  where: {
+                    status: {
+                      equals: status
+                    },
+                    priority: {
+                      equals: priority
+                    }
+                  },
                   select: {
                     id: true,
                     title:true,
@@ -66,8 +86,14 @@ export class TeamTasksController{
                             role: true
                           }
                         }
+                      },
+                      orderBy: {
+                        changedAt: "desc"
                       }
-                    }
+                    },
+                  },
+                  orderBy: {
+                    updatedAt: "desc"
                   }
                 }
               }

@@ -1,8 +1,8 @@
+import { TaskPriority, TaskStatus } from "@/generated/prisma"
 import { Request, Response } from "express"
 import { z } from "zod"
 
 import { AppError } from "@/utils/app-error"
-import { TaskPriority, TaskStatus } from "@/generated/prisma"
 import { prisma } from "@/database/prisma"
 
 const { completed, in_progress, pending } = TaskStatus
@@ -56,6 +56,9 @@ export class TasksController{
                 role: true
               }
             }
+          },
+          orderBy: {
+            changedAt: "asc"
           }
         }
       }
