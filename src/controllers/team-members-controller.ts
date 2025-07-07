@@ -74,7 +74,7 @@ export class TeamMembersController{
     })
 
     if(!teamMember){
-      throw new AppError("Usuário ou time não foram encontrados", 404)
+      throw new AppError("Usuário informado não está no time informado", 404)
     }
 
     await prisma.teamMember.delete({
