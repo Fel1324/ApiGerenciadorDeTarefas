@@ -5,7 +5,7 @@ import { TaskStatus } from "@/generated/prisma"
 import { AppError } from "@/utils/app-error"
 import { prisma } from "@/database/prisma"
 
-const { completed, inProgress, pending } = TaskStatus
+const { completed, in_progress, pending } = TaskStatus
 
 export class TaskHistoryController {
   async create(req: Request, res: Response){
@@ -43,8 +43,8 @@ export class TaskHistoryController {
     const oldStatus = task.status
 
     const bodySchema = z.object({
-      old_status: z.enum([completed, inProgress, pending]).default(oldStatus),
-      new_status: z.enum([completed, inProgress, pending])
+      old_status: z.enum([completed, in_progress, pending]).default(oldStatus),
+      new_status: z.enum([completed, in_progress, pending])
     })
 
     const { new_status, old_status } = bodySchema.parse(req.body)

@@ -5,7 +5,7 @@ import { AppError } from "@/utils/app-error"
 import { TaskPriority, TaskStatus } from "@/generated/prisma"
 import { prisma } from "@/database/prisma"
 
-const { completed, inProgress, pending } = TaskStatus
+const { completed, in_progress, pending } = TaskStatus
 const { high, low, medium } = TaskPriority
 
 export class TasksController{
@@ -54,7 +54,7 @@ export class TasksController{
     const bodySchema = z.object({
       title: z.string().trim().min(5, "O título da tarefa deve conter no mínimo 5 caracteres"),
       description: z.string().trim().optional(),
-      status: z.enum([completed, inProgress, pending]).default(pending),
+      status: z.enum([completed, in_progress, pending]).default(pending),
       priority: z.enum([high, low, medium]),
       assigned_to: z.string().uuid("Id inválido"),
       team_id: z.string().uuid("Id inválido")
@@ -124,7 +124,7 @@ export class TasksController{
     const bodySchema = z.object({
       title: z.string().trim().min(5, "O título da tarefa deve conter no mínimo 5 caracteres").optional(),
       description: z.string().trim().optional(),
-      status: z.enum([completed, inProgress, pending]).optional(),
+      status: z.enum([completed, in_progress, pending]).optional(),
       priority: z.enum([high, low, medium]).optional(),
       assigned_to: z.string().uuid("Id inválido").default(task.assignedTo),
       team_id: z.string().uuid("Id inválido").default(task.teamId)

@@ -15,7 +15,7 @@ enum UserRole {
 
 enum TaskStatus {
   pending
-  inProgress @map("in_progress")
+  in_progress
   completed
 }
 
