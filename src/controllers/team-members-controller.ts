@@ -29,6 +29,17 @@ export class TeamMembersController{
       throw new AppError("Time não encontrado", 404)
     }
 
+    const teamMemberExists = await prisma.teamMember.findFirst({
+      where: {
+        userId: user_id,
+        teamId: team_id
+      }
+    })
+
+    if(teamMemberExists){
+      throw new AppError("Usuário informado já está no time informado")
+    }
+
     const teamMember = await prisma.teamMember.create({
       data: {
         userId: user_id,
@@ -75,6 +86,30 @@ export class TeamMembersController{
 
     if(!teamMember){
       throw new AppError("Usuário informado não está no time informado", 404)
+    }
+
+    const task = await prisma.task.findMany({
+      where: { assignedTo: user_id }
+    })
+
+    const taskHistory = await prisma.taskHistory.findMany({
+      where: { changedBy: user_id }
+    })
+
+    if(taskHistory){
+      await prisma.taskHistory.deleteMany({
+        where: { 
+          changedBy: user_id 
+        }
+      })
+    }
+
+    if(task){
+      await prisma.task.deleteMany({
+        where: {
+          assignedTo: user_id
+        }
+      })
     }
 
     await prisma.teamMember.delete({
