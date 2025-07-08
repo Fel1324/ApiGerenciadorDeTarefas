@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { z } from "zod"
 
-import { TaskStatus } from "@/generated/prisma"
+import { TaskStatus } from "@prisma/client"
 import { AppError } from "@/utils/app-error"
 import { prisma } from "@/database/prisma"
 

@@ -1,4 +1,4 @@
-import { TaskPriority, TaskStatus } from "@/generated/prisma"
+import { TaskPriority, TaskStatus } from "@prisma/client"
 import { Request, Response } from "express"
 import { z } from "zod"
 

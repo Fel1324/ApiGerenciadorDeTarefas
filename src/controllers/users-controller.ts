@@ -4,7 +4,7 @@ import { z } from "zod"
 
 import { prisma } from "@/database/prisma"
 import { AppError } from "@/utils/app-error"
-import { UserRole } from "@/generated/prisma"
+import { UserRole } from "@prisma/client"
 
 const { admin, member } = UserRole
 
