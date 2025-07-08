@@ -6,6 +6,5 @@ const taskHistoryRoutes = Router()
 const taskHistoryController = new TaskHistoryController()
 
 taskHistoryRoutes.post("/", taskHistoryController.create)
-taskHistoryRoutes.delete("/:id", taskHistoryController.remove)
 
 export { taskHistoryRoutes }
