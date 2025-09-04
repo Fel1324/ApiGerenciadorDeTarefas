@@ -36,7 +36,7 @@ describe("UsersController", () => {
     expect(res.body.message).toBe("Já existe um usuário com este email!")
   })
 
-  it("should throw an error if user with same email already exists", async () => {
+  it("should generate an error because of the incorrect email", async () => {
     const res = await request(app).post("/users").send({
       name: "test",
       email: "test-email-com",
